@@ -1,0 +1,81 @@
+# Basic client settings. These are global for all ACC uses.
+[client]
+# Client protocol version
+version = "0"
+# Use the experimental DNS feature.
+# Note that a server must have an A record
+# for IPv4 usage, and an AAAA record for IPv6.
+dns-mode = false
+# Verify the authenticity of the certificate authority.
+# Uses the OS's CA database. If you're not using HTTPS,
+# this doesn't apply. If you're self-hosting, consider
+# getting a Lets Encrypt certificate instead of running
+# with a self-signed one.
+https-verify-ca = false
+
+# Each server needs its own configuration. This is done with
+# a [server.NAME] block. The NAME will be used for referencing
+# the server when interacting with ACC.
+[server.lo]
+# IP address of the target server.
+# Must be IPv4 if ipv = 4, and IPv6 if ipv = 6.
+# Domain names not supported unless dns-mode = true.
+#
+# DO NOT USE 127.0.0.1 as an IP address. This loops back
+# to your own computer, and will NOT work properly with ACC.
+# It is only provided as a placeholder value.
+ip = "127.0.0.1"
+# IP version. IPv4 is safer; IPv6 is available, but
+# has limited support.
+ipv = 4
+# Port that ACC runs on. Presumes the protocol is
+# either TCP or UDP. If using HTTP, this should
+# normally be set to 80, or if HTTPS, 443. The
+# default port for TCP and UDP is 35101.
+port = 35101
+# Protocol that ACC uses. Options:
+#   - TCP: Packets encapsulated in a TCP connection.
+#     - Very stable, highest recommendation. However, especially
+#       on unstable network connections, can be very slow.
+#   - UDP: Packets encapsulated in a UDP connection.
+#     - Nowhere near as stable, but generally the industry standard.
+#       Some networks may block outbound UDP, making this unusable.
+#       UDP packets are not guaranteed to survive! This should not
+#       be an issue for most software, as there's generally TCP
+#       encapsulation within UDP, but it should be noted.
+#   - HTTP: Packets are encapsulated in an HTTP connection.
+#     - This is used to circumvent restrictions on "unknown protocols"
+#       and "unknown ports". Generally runs over 80/tcp.
+#   - HTTPS: Packets are encapsulated in an HTTPS connection.
+#     - This is used to circumvent the most amount of restrictions.
+#       The ACC obfuscations are even further hidden under TLS.
+#       Only secure when using a trusted certificate (trusted or self CA).
+#       Generally runs over 443/tcp.
+proto = "tcp"
+# Encryption key type. Must also be supported by the server.
+# Asymmetric types: rsa2048, rsa3072, rsa4096, ed25519
+# Symmetric types: aes128, aes192, aes256
+# You should only use a symmetric key if your server is YOUR OWN, and you
+# are the ONLY ONE controlling the keys. If there is even the hypothetical
+# possibility of someone else using the server, you should be using an
+# ASYMMETRIC KEY. For asymmetric, we recommend rsa4096, and symmetric aes256.
+enc-type = "aes256"
+# Link to the associated keyfile. For asymmetric, this is the public key.
+keyfile = "/etc/acc/lo-256.aes"
+# Indicate that authentication is being used for this server.
+# If disabled, usage may be tracked as the user "anonymous".
+auth = true
+
+# This block specifies the authentication settings for a given server.
+# Only used if auth = true in that server's config.
+# Block name should be [auth.NAME], where NAME is the NAME on the server config.
+[auth.lo]
+# Your account's username.
+username = "default"
+# Your authentication key. Currently supported are ASCII armored SSH keys
+# and GPG/PGP keys. Note that keys with passwords are not currently supported, this
+# is a feature which may be added in the future.
+authkey = "/etc/acc/id_rsa.ssh"
+# Specify whether authkey should be pulled from your GPG database or from a file.
+# Types are "file" and "gpg".
+aksrc = "file"
