@@ -1,0 +1,19 @@
+[General]
+# server identifies which server will be used
+# 0 = switch between all, the others are numbered starting at 1
+server = 1
+# outgoing interface
+interface = "eno1"
+# enable special universal features (GFWEntropy, GFWSlowASCII, ...)
+features = []
+# enable server-specific features (GFWPrefix, GFWASCII, ...)
+features_danger = []
+
+[[Server]]
+# lowest and highest port in the dynamic range, inclusive
+lowport = 53981
+highport = 53981
+# protocols: tcp, udp, http, https, etc
+proto = "tcp"
+# destination (IPv4 or IPv6)
+ip = "10.4.0.1"
