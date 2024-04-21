@@ -1,8 +1,10 @@
 [General]
+# acc version to use, must be supported by all servers listed
+version = 1
 # server identifies which server will be used
 # 0 = switch between all, the others are numbered starting at 1
 server = 1
-# outgoing interface
+# outgoing interface; comment out to autodetect
 interface = "eno1"
 # enable special universal features (GFWEntropy, GFWSlowASCII, ...)
 features = []
