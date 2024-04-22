@@ -6,10 +6,12 @@ version = 1
 server = 1
 # outgoing interface; comment out to autodetect
 interface = "eno1"
-# enable special universal features (GFWEntropy, GFWSlowASCII, ...)
+# enable features (GfwEntropy, GfwSlowAscii, ...)
 features = []
-# enable server-specific features (GFWPrefix, GFWASCII, ...)
-features_danger = []
+# enable verbose output; overrides CLI arg if present
+# verbose = false
+# daemonize (overrides CLI if present)
+daemon = true
 
 [[Server]]
 # lowest and highest port in the dynamic range, inclusive
