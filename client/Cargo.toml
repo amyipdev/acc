@@ -1,7 +1,17 @@
 [package]
-name = "client"
+name = "acc"
 version = "0.1.0"
+authors = ["Amy Parker <amy@amyip.net>"]
 edition = "2021"
+rust-version = "1.74.1"
+description = "Aggressive Circumvention of Censorship (ACC) client"
+# homepage = TBC
+repository = "https://github.com/amyipdev/acc"
+# categories
+# keywords
+
+# if necessary, ios/android build features?
+# platform build scripts (download/build wintun?)
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
