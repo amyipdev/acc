@@ -4,6 +4,8 @@ mod tun;
 mod errors;
 mod consts;
 
+extern crate tun as ober_tun;
+
 use std::{path::Path, net::IpAddr, collections::{HashMap, HashSet}};
 
 use clap::Parser;
