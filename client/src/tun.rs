@@ -1,44 +1,38 @@
-mod tun {
-    static ACC_MTU_SIZE: i32 = 1280;
-    use tun::{
-        platform::{linux, Device},
-        IntoAddress,
-    };
-    extern crate tun;
-    pub fn linux_tun(ip_addr: impl IntoAddress, netmask: impl IntoAddress) -> Device {
-        let mut config = tun::Configuration::default();
-        config
-            .address(ip_addr)
-            .netmask(netmask)
-            .up()
-            .mtu(ACC_MTU_SIZE);
+use tun::{
+    platform::{linux, Device}
+};
+use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
 
-        #[cfg(target_os = "linux")]
-        config.platform(|config| {
-            config.packet_information(true);
-        });
-
-        let dev: Device = tun::create(&config).unwrap();
-        dev
-    }
+static ACC_MTU_SIZE: i32 = 1280;
+pub struct TunConfig {
+    address: Ipv4Addr,
+    destination: Ipv4Addr,
+    netmask: Option<Ipv4Addr>,
 }
 
-#[cfg(test)]
-mod tests {
-    //must run as root. test -- --nocapture to see the input.
-    use super::tun::{self, linux_tun};
-    use std::io::Read;
-    use std::net::{IpAddr, Ipv4Addr, SocketAddrV4};
-    #[test]
-    fn placeholder() {
-        let address = SocketAddrV4::new(Ipv4Addr::new(255, 0, 0, 1), 8000);
-        let netmask = (255, 0, 0, 0);
-        let mut dev = linux_tun(address, netmask);
-        let mut buf = [0; 4096];
+#[cfg(target_os = "linux")]
+pub fn build_tun(tun_config: TunConfig) -> Result<Device, ober_tun::Error> {
+    let mut config = tun::Configuration::default();
+    config
+        .address(tun_config.address)
+        .netmask(tun_config.netmask.unwrap())
+        .mtu(ACC_MTU_SIZE)
+        .up();
 
-        loop {
-            let amount = dev.read(&mut buf).unwrap();
-            println!("{:?}", &buf[0..amount]);
-        }
-    }
+    config.platform(|config| {
+        config.packet_information(true);
+    });
+
+    let device: Result<Device, ober_tun::Error> = tun::create(&config);
+    device
+}
+
+#[cfg(target_os = "windows")]
+pub fn build_tun() {
+    unimplemented!()
+}
+
+#[cfg(target_os = "macos")]
+pub fn build_tun() {
+    unimplemented!()
 }
